@@ -1,0 +1,19 @@
+{
+  "name": "proxy-driver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/better-sqlite3": "^7.6.4",
+    "axios": "^1.4.0",
+    "better-sqlite3": "^8.5.2",
+    "drizzle-kit": "^0.19.13",
+    "drizzle-orm": "^0.28.5",
+    "fastify": "^4.21.0",
+    "superjson": "^1.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.6",
+    "typescript": "^5.2.2"
+  }
+}
