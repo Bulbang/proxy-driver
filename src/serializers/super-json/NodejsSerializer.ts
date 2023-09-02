@@ -1,10 +1,7 @@
 import { parse, registerCustom, stringify } from 'superjson';
-import { IDeserializer, ISerializer } from '../interfaces';
+import { IDeserializer, ISerializer } from '../../interfaces';
 
-export class NodejsSerializer implements ISerializer, IDeserializer {
-    /**
-     *
-     */
+export class SuperJsonSerializer implements ISerializer, IDeserializer {
     constructor() {
         registerCustom<Buffer, number[]>(
             {

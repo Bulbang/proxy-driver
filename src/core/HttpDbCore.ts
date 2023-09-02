@@ -1,3 +1,4 @@
+import { log } from 'console';
 import {
 	IDeliverer,
 	IDeserializer,
@@ -46,6 +47,9 @@ export class HttpDbCore<TRuntime extends 'nodejs' | 'v8'> {
 			reqParams,
 			method,
 		});
+
+		log(response)
+		log(sqlBody, reqParams)
 
 		this.deliverer.pipe(this.serializer.serialize(response), destination);
 	}

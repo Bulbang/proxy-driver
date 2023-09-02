@@ -3,24 +3,25 @@ import { drizzle } from 'drizzle-orm/sqlite-proxy';
 import { migrate } from 'drizzle-orm/sqlite-proxy/migrator';
 import { testTable } from './schema/schema';
 import { log } from 'console';
-import {stringify, parse, registerCustom} from 'superjson'
+import { stringify, parse, registerCustom } from 'superjson';
+import { eq } from 'drizzle-orm';
 
-const serialize =(data : any) => {
-    return stringify(data)
-}
+const serialize = (data: any) => {
+	return stringify(data);
+};
 
-const deserialize =<T>(data: any) => {
-    return parse<T>(data)
-}
+const deserialize = <T>(data: any) => {
+	return parse<T>(data);
+};
 
 registerCustom<Buffer, number[]>(
-    {
-      isApplicable: (v): v is Buffer => v instanceof Buffer,
-      serialize: v => [...v],
-      deserialize: v => Buffer.from(v)
-    },
-    "buffer"
-  );
+	{
+		isApplicable: (v): v is Buffer => v instanceof Buffer,
+		serialize: (v) => [...v],
+		deserialize: (v) => Buffer.from(v),
+	},
+	'buffer'
+);
 
 const db = drizzle(async (sql, params, method) => {
 	try {
@@ -48,34 +49,38 @@ const func = () => {
 	const buff = Buffer.from('hello world');
 
 	const serialized = serialize({ buff });
-    log(buff)
+	log(buff);
 	// log(serialized);
 
-    const deserialized = deserialize<{buff: Buffer}>(serialized)
+	const deserialized = deserialize<{ buff: Buffer }>(serialized);
 
 	// log(deserialized);
-    log(deserialized.buff)
+	log(deserialized.buff);
 };
 
 // func()
 
 const main = async () => {
-	// await migrate(
-	// 	db,
-	// 	async (queries) => {
-	// 		try {
-	// 			const rows = await axios.post('http://0.0.0.0:3000/migrate', serialize({
-	// 				queries,
-	// 			}));
-	// 		} catch (e: any) {
-	// 			console.error(
-	// 				'Error from sqlite proxy server: ',
-	// 				e.response?.data
-	// 			);
-	// 		}
-	// 	},
-	// 	{ migrationsFolder: './drizzle' }
-	// );
+	await migrate(
+		db,
+		async (queries) => {
+			try {
+				const rows = await axios.post(
+					'http://0.0.0.0:3000/migrate',
+					serialize({
+						queries,
+					}),
+					{ headers: { 'Content-Type': 'text/plain' } }
+				);
+			} catch (e: any) {
+				console.error(
+					'Error from sqlite proxy server: ',
+					e.response?.data
+				);
+			}
+		},
+		{ migrationsFolder: './drizzle' }
+	);
 
 	await db.insert(testTable).values({
 		json: {

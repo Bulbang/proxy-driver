@@ -1,7 +1,7 @@
 import BetterSqlite3 from 'better-sqlite3';
-import { IQueryExecutor } from '../interfaces';
+import { IQueryExecutor } from '../../interfaces';
 
-export class BetterSqlite3Executor implements IQueryExecutor {
+export default class BetterSqlite3Executor implements IQueryExecutor {
 	private sqlite: BetterSqlite3.Database;
 
 	constructor(pathToDb: string) {
